@@ -1,6 +1,7 @@
 import { Product } from "../../core/entity/Product";
 import { ProductRepositoyPort } from "../../core/ports/ProductRepositoyPort";
 import { AppDataSource } from "../../../../adapters/dataSource/data-source"
+import e = require("express");
 
 
 
@@ -14,10 +15,13 @@ export class typeormProductRepo implements ProductRepositoyPort {
 
     async findById(id: string): Promise<Product | null> {
         const product = await this.productRepository.findOneBy({ id });
-        return product
+        return product;
     }
     
     async create(product: Product): Promise<Product> {        
+        if(!(product instanceof Product)){
+            throw new Error('Invalid product')
+        }
         return this.productRepository.save(product);        
     }
 

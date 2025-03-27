@@ -5,7 +5,9 @@ import { IProduct } from "../domain/IProduct";
 @Entity()
 export class Product implements IProduct{
     @PrimaryGeneratedColumn()
-    id: string;
+    id: string;      
+    @Column()
+    barcode: string;
     @Column()
     name: string;
     @Column()
@@ -13,15 +15,15 @@ export class Product implements IProduct{
     @Column()
     group: string;
     @Column()
-    description?: string;
+    description: string;
     @Column()
     price: number;
     @Column()
-    ProfitPercentage?: number;
+    ProfitPercentage: number;
     @Column()
-    Supplier?: string;
+    Supplier: string;
     @Column()
-    urlImage?: string;
+    urlImage: string;
     @CreateDateColumn()
     createdAt: Date;
     @UpdateDateColumn()
@@ -29,10 +31,15 @@ export class Product implements IProduct{
 
     constructor(){
         this.id = '';
+        this.barcode = '';
         this.name = '';
         this.quantity = 0;
         this.group = '';
+        this.description = '';
         this.price = 0;
+        this.ProfitPercentage = 0;
+        this.Supplier = '';
+        this.urlImage = '';
         this.createdAt = new Date();
         this.updatedAt = new Date();
     }

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { ProductService } from "../../../core/services/productService";
 import { IProduct } from "../../../core/domain/IProduct";
+import e = require("express");
 
 
 export class ProductController {
@@ -21,6 +22,9 @@ export class ProductController {
     async findById(req: Request, res: Response) {
         const { id } = req.params;
         try {
+            if (!id) {
+                return res.status(400).json({ message: 'Id is required' });
+            }
             const product = await this.productService.findById(id);
             if (!product) {
                 return res.status(404).json({ message: 'Product not found' });
@@ -34,7 +38,7 @@ export class ProductController {
     async create(req: Request, res: Response) {
         const product: IProduct = req.body;
         try {
-            // console.log(product);
+            
             const newProduct = await this.productService.create(product);
 
             return res.json(newProduct);
