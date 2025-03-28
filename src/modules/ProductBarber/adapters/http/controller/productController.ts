@@ -2,6 +2,10 @@ import { Request, Response } from "express";
 import { ProductService } from "../../../core/services/productService";
 import { IProduct } from "../../../core/domain/IProduct";
 import e = require("express");
+import { plainToClass } from "class-transformer";
+import ProductCreateDTO from "../../dtos/ProductCreateDTO";
+import { validate, ValidationError } from "class-validator";
+import { errorHandler } from "../../middleware/error/error";
 
 
 export class ProductController {
@@ -37,14 +41,11 @@ export class ProductController {
 
     async create(req: Request, res: Response) {
         const product: IProduct = req.body;
-        try {
-            
+        try {                       
             const newProduct = await this.productService.create(product);
-
             return res.json(newProduct);
-        } catch (error) {
-            console.error("Error in ProductController.create:", error);
-            return res.status(500).json({ message: 'Internal server error' });
+        } catch (error) {               
+            return errorHandler(error, res);
         }
     }
 

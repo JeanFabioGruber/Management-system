@@ -2,6 +2,9 @@ import { Product } from "../../core/entity/Product";
 import { ProductRepositoyPort } from "../../core/ports/ProductRepositoyPort";
 import { AppDataSource } from "../../../../adapters/dataSource/data-source"
 import e = require("express");
+import { plainToClass } from "class-transformer";
+import ProductCreateDTO from "../dtos/ProductCreateDTO";
+import { validate } from "class-validator";
 
 
 
@@ -18,10 +21,16 @@ export class typeormProductRepo implements ProductRepositoyPort {
         return product;
     }
     
-    async create(product: Product): Promise<Product> {        
-        if(!(product instanceof Product)){
-            throw new Error('Invalid product')
+    async create(product: Product): Promise<Product> {
+        const productExist = await this.productRepository.findOneBy({ barcode: product.barcode });
+        if (productExist) {
+            throw new Error('Product already exists');
         }
+        const productDto = plainToClass(ProductCreateDTO, product);
+        const errors = await validate(productDto);
+        if (errors.length > 0) {
+            throw errors;
+        }         
         return this.productRepository.save(product);        
     }
 

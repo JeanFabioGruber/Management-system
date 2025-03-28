@@ -1,7 +1,7 @@
 
 
 export interface IProduct {
-    id: string;
+    id?: string;
     barcode: string;
     name: string;
     quantity: number;
@@ -11,6 +11,6 @@ export interface IProduct {
     ProfitPercentage: number;
     Supplier: string;
     urlImage: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
