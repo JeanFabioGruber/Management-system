@@ -9,9 +9,9 @@ class ProductCreateDTO implements IProduct {
     @IsString()    
     barcode!: string;
 
-    @IsNumber()
+    @IsString()
     @IsNotEmpty()
-    quantity!: number;
+    quantity!: string;
 
     @IsString()
     group!: string;
@@ -19,13 +19,13 @@ class ProductCreateDTO implements IProduct {
     @IsString()
     description!: string;
 
-    @IsNumber()
+    @IsString()
     @IsNotEmpty()
-    price!: number;
+    price!: string;
 
-    @IsNumber()
+    @IsString() 
     @IsNotEmpty()
-    ProfitPercentage!: number;
+    ProfitPercentage!: string;
 
     @IsString()
     @IsNotEmpty()

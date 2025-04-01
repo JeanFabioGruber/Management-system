@@ -4,11 +4,11 @@ export interface IProduct {
     id?: string;
     barcode: string;
     name: string;
-    quantity: number;
+    quantity: string;
     group: string;
     description: string;
-    price: number;
-    ProfitPercentage: number;
+    price: string;
+    ProfitPercentage: string;
     Supplier: string;
     urlImage: string;
     createdAt?: Date;

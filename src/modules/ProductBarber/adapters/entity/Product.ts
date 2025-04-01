@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { IProduct } from "../domain/IProduct";
+import { IProduct } from "../../core/domain/IProduct";
 
 
 @Entity()
@@ -11,15 +11,15 @@ export class Product implements IProduct{
     @Column()
     name: string;
     @Column()
-    quantity: number;
+    quantity: string;
     @Column()
     group: string;
     @Column()
     description: string;
     @Column()
-    price: number;
+    price: string;
     @Column()
-    ProfitPercentage: number;
+    ProfitPercentage: string;
     @Column()
     Supplier: string;
     @Column()
@@ -33,11 +33,11 @@ export class Product implements IProduct{
         this.id = '';
         this.barcode = '';
         this.name = '';
-        this.quantity = 0;
+        this.quantity = "0";
         this.group = '';
         this.description = '';
-        this.price = 0;
-        this.ProfitPercentage = 0;
+        this.price = "0";
+        this.ProfitPercentage = "0";
         this.Supplier = '';
         this.urlImage = '';
         this.createdAt = new Date();
