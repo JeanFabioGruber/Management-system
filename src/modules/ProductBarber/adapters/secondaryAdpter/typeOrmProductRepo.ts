@@ -5,6 +5,7 @@ import e = require("express");
 import { plainToClass } from "class-transformer";
 import ProductCreateDTO from "../dtos/ProductCreateDTO";
 import { validate } from "class-validator";
+import ProductUpdateDTO from "../dtos/ProductUpdateDTO";
 
 
 
@@ -38,12 +39,29 @@ export class typeormProductRepo implements ProductRepositoyPort {
         return this.productRepository.save(product);        
     }
 
-    async update(product: Product): Promise<Product> {
-        return this.productRepository.save(product);
+    async update(id: number, product: Partial< Product>): Promise<Product> {
+        const productExist = await this.productRepository.findOneBy({ id: id.toString() });
+        if (!productExist) {
+            throw new Error('Product not found');
+        }        
+        const productDto = plainToClass(ProductUpdateDTO, product);
+        const errors = await validate(productDto);
+        if (errors.length > 0) {
+            throw errors;
+        } 
+        return this.productRepository.save({ ...productExist, ...product });        
     }
 
     async delete(id: string): Promise<void> {
         await this.productRepository.delete({ id });
+    }
+
+    async findByBarcode(barcode: string): Promise<Product | null> {
+        const product = await this.productRepository.findOneBy({ barcode });
+        if (!product) {
+            console.log("Product not found");      
+        }
+        return product;
     }
    
 

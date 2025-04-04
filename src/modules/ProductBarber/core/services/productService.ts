@@ -20,11 +20,15 @@ export class ProductService {
         return this.productRepository.create(product);
     }
 
-    async update(product: IProduct): Promise<IProduct> {
-        return this.productRepository.update(product);
+    async update(id: number, product: IProduct): Promise<IProduct> {
+        return this.productRepository.update(id, product);
     }
 
     async delete(id: string): Promise<void> {
         return this.productRepository.delete(id);
+    }
+
+    async findByBarcode(barcode: string): Promise<IProduct | null> {
+        return this.productRepository.findByBarcode(barcode);
     }
 }

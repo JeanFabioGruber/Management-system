@@ -12,8 +12,8 @@ export const AllProductMapper = (products: IProduct) => {
         description: products.description,
         price: products.price,
         url: products.urlImage,
-        createdAt: products.createdAt, 
-        updatedAt: products.updatedAt,
+        ProfitPercentage: products.ProfitPercentage,
+        Supplier: products.Supplier,
 
 
         

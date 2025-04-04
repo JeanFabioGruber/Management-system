@@ -77,11 +77,20 @@ export class ProductController {
     }
 
     async update(req: Request, res: Response) {
+        const { id } = req.params;
         const product: IProduct = req.body;
         try {
-            const updatedProduct = await this.productService.update(product);
+            if (!id) {
+                return res.status(400).json({ message: 'Id is required' });
+            }
+            const existingProduct = await this.productService.findById(id);
+            if (!existingProduct) {
+                return res.status(404).json({ message: 'Product not found' });
+            }
+            const updatedProduct = await this.productService.update(Number(id), product);
             return res.json(updatedProduct);
         } catch (error) {
+            console.error('Error updating product:', error);
             return res.status(500).json({ message: 'Internal server error' });
         }
     }
@@ -106,4 +115,23 @@ export class ProductController {
             return res.status(500).json({ message: 'Internal server error' });
         }
     }
+
+    async findByBarcode(req: Request, res: Response) {
+        const { barcode } = req.params;
+
+        try {
+            if (!barcode) {
+                return res.status(400).json({ message: 'Barcode is required' });
+            }
+            const product = await this.productService.findByBarcode(barcode);
+            if (!product) {
+                return res.status(404).json({ message: 'Product not found' });
+            }      
+            console.log("product", product);      
+            return res.json(product);
+        } catch (error) {
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+
 }
