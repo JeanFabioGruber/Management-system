@@ -1,16 +1,15 @@
 import { Product } from "../entity/Product";
 import { ProductRepositoyPort } from "../../core/ports/ProductRepositoyPort";
-import { AppDataSource } from "../../../../adapters/dataSource/data-source"
-import e = require("express");
+import { AppDataSource } from "../../../../adapters/dataSource/data-source";
 import { plainToClass } from "class-transformer";
 import ProductCreateDTO from "../dtos/ProductCreateDTO";
 import { validate } from "class-validator";
 import ProductUpdateDTO from "../dtos/ProductUpdateDTO";
-
-
+import { GroupProduct } from "../../../GroupProdut/adapters/entity/GroupProduct";
 
 export class typeormProductRepo implements ProductRepositoyPort {  
     private productRepository = AppDataSource.getRepository(Product);
+    private groupRepository = AppDataSource.getRepository(GroupProduct);
     
 
     async findAll(): Promise<Product[]> {
@@ -25,12 +24,22 @@ export class typeormProductRepo implements ProductRepositoyPort {
         return product;
     }
     
-    async create(product: Product): Promise<Product> {
+    async create(product: Product, idGroupProductNumber: string): Promise<Product> {
+        
         const productExist = await this.productRepository.findOneBy({ barcode: product.barcode });
         if (productExist) {
             throw new Error('Product already exists');
-        }
-        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", product);
+        }   
+        const id = idGroupProductNumber;
+        console.log("iddddddd",id);
+        const groupExist = await this.groupRepository.findOneBy({ id });
+        console.log(groupExist);     
+        
+        
+        if (!groupExist) {
+            throw new Error('Group not found');
+        }  
+        product.group = [{ ...groupExist, products: [] }];
         const productDto = plainToClass(ProductCreateDTO, product);
         const errors = await validate(productDto);
         if (errors.length > 0) {
@@ -39,8 +48,8 @@ export class typeormProductRepo implements ProductRepositoyPort {
         return this.productRepository.save(product);        
     }
 
-    async update(id: number, product: Partial< Product>): Promise<Product> {
-        const productExist = await this.productRepository.findOneBy({ id: id.toString() });
+    async update(barcode: string, product: Product): Promise<Product> {
+        const productExist = await this.productRepository.findOneBy({ barcode });
         if (!productExist) {
             throw new Error('Product not found');
         }        
@@ -49,7 +58,7 @@ export class typeormProductRepo implements ProductRepositoyPort {
         if (errors.length > 0) {
             throw errors;
         } 
-        return this.productRepository.save({ ...productExist, ...product });        
+        return this.productRepository.save({ ...productExist, ...product });
     }
 
     async delete(id: string): Promise<void> {
@@ -63,6 +72,12 @@ export class typeormProductRepo implements ProductRepositoyPort {
         }
         return product;
     }
-   
 
+    async findByGroup(group: string): Promise<Product[] | null> {
+        const products = await this.productRepository.findBy({ group: { id: group } });
+        if (!products) {
+            console.log("Product not found");      
+        }
+        return products;
+    }
 }

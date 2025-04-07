@@ -1,6 +1,6 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToMany, JoinTable, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { IProduct } from "../../core/domain/IProduct";
-
+import { GroupProduct } from "../../../GroupProdut/adapters/entity/GroupProduct";
 
 @Entity()
 export class Product implements IProduct{
@@ -11,9 +11,7 @@ export class Product implements IProduct{
     @Column()
     name: string;
     @Column()
-    quantity: string;
-    @Column()
-    group: string;
+    quantity: string;    
     @Column()
     description: string;
     @Column()
@@ -23,7 +21,10 @@ export class Product implements IProduct{
     @Column()
     Supplier: string;
     @Column()
-    urlImage: string;
+    urlImage: string;    
+    @ManyToMany(() => GroupProduct, (group) => group.products, { eager: true })
+    @JoinTable()
+    group!: GroupProduct[];    
     @CreateDateColumn()
     createdAt: Date;
     @UpdateDateColumn()
@@ -33,8 +34,7 @@ export class Product implements IProduct{
         this.id = '';
         this.barcode = '';
         this.name = '';
-        this.quantity = "0";
-        this.group = '';
+        this.quantity = "0";      
         this.description = '';
         this.price = "0";
         this.ProfitPercentage = "0";

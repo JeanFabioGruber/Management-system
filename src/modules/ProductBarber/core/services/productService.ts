@@ -16,19 +16,23 @@ export class ProductService {
         return this.productRepository.findById(id);
     }
 
-    async create(product: IProduct): Promise<IProduct> {
-        return this.productRepository.create(product);
+    async create(product: IProduct, idGroupProduct: string): Promise<IProduct> {
+        return this.productRepository.create(product, idGroupProduct);
     }
 
-    async update(id: number, product: IProduct): Promise<IProduct> {
-        return this.productRepository.update(id, product);
+    async update(barcode: string, product: IProduct): Promise<IProduct> {
+        return this.productRepository.update(barcode, product);
     }
 
     async delete(id: string): Promise<void> {
         return this.productRepository.delete(id);
     }
 
-    async findByBarcode(barcode: string): Promise<IProduct | null> {
-        return this.productRepository.findByBarcode(barcode);
+    async findByBarcode(id: string): Promise<IProduct | null> {
+        return this.productRepository.findByBarcode(id);
+    }
+
+    async findByGroup(group: string): Promise<IProduct[] | null> {
+        return this.productRepository.findByGroup(group);
     }
 }

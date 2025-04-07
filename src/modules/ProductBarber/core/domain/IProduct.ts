@@ -1,3 +1,4 @@
+import { IGroupProduct } from "../../../GroupProdut/core/domain/IGroupProduct";
 
 
 export interface IProduct {
@@ -5,7 +6,7 @@ export interface IProduct {
     barcode: string;
     name: string;
     quantity: string;
-    group: string;
+    group: IGroupProduct[];
     description: string;
     price: string;
     ProfitPercentage: string;

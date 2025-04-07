@@ -38,12 +38,12 @@ export class ProductController {
     }
 
     async findImage(req: Request, res: Response) {
-        const { id } = req.params;
+        const { barcode } = req.params;
         try {
-            if (!id) {
-                return res.status(400).json({ message: 'Id is required' });
+            if (!barcode) {
+                return res.status(400).json({ message: 'barcode is required' });
             }
-            const product = await this.productService.findById(id);
+            const product = await this.productService.findByBarcode(barcode)
             if (!product) {
                 return res.status(404).json({ message: 'Product not found' });
             } 
@@ -56,7 +56,9 @@ export class ProductController {
     }
 
     async create(req: Request, res: Response) {        
-        const product: IProduct = req.body;
+        const product: IProduct = req.body;        
+        const { idGroupProduct } = req.params;
+        
         try { 
             if (!req.file) {
                 res.status(400).send("Nenhum arquivo enviado.");
@@ -69,7 +71,7 @@ export class ProductController {
                 return;
             } 
             product.urlImage = blobUrl;                
-            const newProduct = await this.productService.create(product);
+            const newProduct = await this.productService.create(product, idGroupProduct);
             return res.json(newProduct);
         } catch (error) {               
             return errorHandler(error, res);
@@ -77,17 +79,17 @@ export class ProductController {
     }
 
     async update(req: Request, res: Response) {
-        const { id } = req.params;
+        const { barcode } = req.params;
         const product: IProduct = req.body;
         try {
-            if (!id) {
+            if (!barcode) {
                 return res.status(400).json({ message: 'Id is required' });
-            }
-            const existingProduct = await this.productService.findById(id);
+            }            
+            const existingProduct = await this.productService.findByBarcode(barcode);
             if (!existingProduct) {
                 return res.status(404).json({ message: 'Product not found' });
             }
-            const updatedProduct = await this.productService.update(Number(id), product);
+            const updatedProduct = await this.productService.update(barcode, product);
             return res.json(updatedProduct);
         } catch (error) {
             console.error('Error updating product:', error);
@@ -96,19 +98,23 @@ export class ProductController {
     }
 
     async delete(req: Request, res: Response) {
-        const { id } = req.params;
+        const { barcode } = req.params;
         try {
-            if (!id) {
-                console.log('Id is required');
+            if (!barcode) {
+                console.log('barcode is required');
                 return res.status(500).json({ message: 'Internal server error' });
             }
-            const product = await this.productService.findById(id);
+            const product = await this.productService.findByBarcode(barcode);
             
             if (!product) {
                 console.log('Product not found');
                 return res.status(500).json({ message: 'Internal server error' });
             }            
-            await deleteBlob(product.urlImage);           
+            await deleteBlob(product.urlImage);            
+            if (!product.id) {
+                return res.status(400).json({ message: 'Product ID is undefined' });
+            }
+            const id = product.id.toString();           
             await this.productService.delete(id);
             return res.status(204).send();
         } catch (error) {
@@ -128,6 +134,22 @@ export class ProductController {
                 return res.status(404).json({ message: 'Product not found' });
             }      
             console.log("product", product);      
+            return res.json(product);
+        } catch (error) {
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+
+    async findByGroup(req: Request, res: Response) {
+        const { group } = req.params;
+        try {
+            if (!group) {
+                return res.status(400).json({ message: 'Group is required' });
+            }
+            const product = await this.productService.findByGroup(group);
+            if (!product) {
+                return res.status(404).json({ message: 'Product not found' });
+            }      
             return res.json(product);
         } catch (error) {
             return res.status(500).json({ message: 'Internal server error' });

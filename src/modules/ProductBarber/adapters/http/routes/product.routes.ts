@@ -15,12 +15,12 @@ const productController = new ProductController(productService);
 
 router.get('/', productController.findAll.bind(productController));
 router.get('/:id', productController.findById.bind(productController));
-router.post('/', upload.single('file'), productController.create.bind(productController));
-router.get('/image/:id', productController.findImage.bind(productController));
-router.put('/:id', productController.update.bind(productController));
-router.delete('/:id', productController.delete.bind(productController));
-// pegar produto pelo barcode
+router.post('/:idGroupProduct', upload.single('file'), productController.create.bind(productController));
+router.get('/image/:barcode', productController.findImage.bind(productController));
+router.put('/barcode/:barcode', productController.update.bind(productController));
+router.delete('/barcode/:barcode', productController.delete.bind(productController));
 router.get('/barcode/:barcode', productController.findByBarcode.bind(productController));
+router.get('/group/:group', productController.findByGroup.bind(productController));
 
 
 export default router;  
