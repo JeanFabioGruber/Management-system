@@ -2,7 +2,6 @@ import { AppDataSource } from "../../../../adapters/dataSource/data-source";
 import { GroupRepositoryPort } from "../../core/ports/GroupRepository";
 import { GroupProduct } from "../entity/GroupProduct";
 
-
 export class TypeOrmGroupProductRepo implements GroupRepositoryPort {
     private groupProductRepository = AppDataSource.getRepository(GroupProduct);
 
@@ -36,9 +35,18 @@ export class TypeOrmGroupProductRepo implements GroupRepositoryPort {
     }
 
     async delete(id: string): Promise<void> {
-        
+        const groupProduct = await this.groupProductRepository.findOne({
+            where: { id },
+            relations: ["products"]
+        });
+        if (!groupProduct) {
+            throw new Error('GroupProduct not found');
+        }
+        if (groupProduct.products && groupProduct.products.length > 0) {
+            throw new Error('Não é possível excluir o grupo pois ele está vinculado a um ou mais produtos');
+        }
+        await this.groupProductRepository.delete(id);
+        console.log("GroupProduct deleted successfully");
+        return;
     }
-
-
-    
 }
