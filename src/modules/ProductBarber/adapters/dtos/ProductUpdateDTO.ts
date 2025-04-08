@@ -1,6 +1,7 @@
 import { IsOptional, IsString, IsNotEmpty } from "class-validator";
 import { IProduct } from "../../core/domain/IProduct";
 import { IGroupProduct } from "../../../GroupProdut/core/domain/IGroupProduct";
+import { ISupplier } from "../../../Supplier/core/domain/ISupplier";
 
 class ProductUpdateDTO implements Partial<IProduct> { 
     @IsString()
@@ -33,7 +34,7 @@ class ProductUpdateDTO implements Partial<IProduct> {
 
     @IsString()
     @IsOptional()
-    Supplier?: string;
+    Supplier?: ISupplier[];
 
     @IsString()
     @IsOptional()

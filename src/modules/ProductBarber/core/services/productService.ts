@@ -16,8 +16,8 @@ export class ProductService {
         return this.productRepository.findById(id);
     }
 
-    async create(product: IProduct, idGroupProduct: string): Promise<IProduct> {
-        return this.productRepository.create(product, idGroupProduct);
+    async create(product: IProduct, idGroupProduct: string, idSupplier: string): Promise<IProduct> {
+        return this.productRepository.create(product, idGroupProduct, idSupplier);
     }
 
     async update(barcode: string, product: IProduct): Promise<IProduct> {
@@ -34,5 +34,9 @@ export class ProductService {
 
     async findByGroup(group: string): Promise<IProduct[] | null> {
         return this.productRepository.findByGroup(group);
+    }
+
+    async updateGroupProduct(barcode: string, idGroupProduct: string): Promise<IProduct> {
+        return this.productRepository.updateGroupProduct(barcode, idGroupProduct);
     }
 }

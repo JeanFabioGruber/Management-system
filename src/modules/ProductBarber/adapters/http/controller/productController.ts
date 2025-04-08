@@ -56,8 +56,11 @@ export class ProductController {
     }
 
     async create(req: Request, res: Response) {        
-        const product: IProduct = req.body;        
-        const { idGroupProduct } = req.params;
+        const product: IProduct = req.body;             
+        const { idGroupProduct, idSupplier } = req.params;
+
+        console.log("idGroupProduct", idGroupProduct);
+        console.log("idSupplier", idSupplier);
         
         try { 
             if (!req.file) {
@@ -71,7 +74,7 @@ export class ProductController {
                 return;
             } 
             product.urlImage = blobUrl;                
-            const newProduct = await this.productService.create(product, idGroupProduct);
+            const newProduct = await this.productService.create(product, idGroupProduct, idSupplier);
             return res.json(newProduct);
         } catch (error) {               
             return errorHandler(error, res);
@@ -155,5 +158,27 @@ export class ProductController {
             return res.status(500).json({ message: 'Internal server error' });
         }
     }
+
+    async updateGroupProduct(req: Request, res: Response) {
+        const { barcode } = req.params;
+        const { idGroupProduct } = req.body;
+        try {
+            console.log("idGroupProduct", idGroupProduct);
+            console.log("barcode", barcode);
+
+            if (!barcode) {
+                return res.status(400).json({ message: 'barcode is required' });
+            }
+            const product = await this.productService.updateGroupProduct(barcode, idGroupProduct);
+            if (!product) {
+                return res.status(404).json({ message: 'Product not found' });
+            }      
+            return res.json(product);
+        } catch (error) {
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+
+
 
 }

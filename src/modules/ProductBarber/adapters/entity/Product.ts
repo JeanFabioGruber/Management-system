@@ -1,6 +1,8 @@
 import { Column, CreateDateColumn, Entity, ManyToMany, JoinTable, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { IProduct } from "../../core/domain/IProduct";
 import { GroupProduct } from "../../../GroupProdut/adapters/entity/GroupProduct";
+import { Supplier } from "../../../Supplier/adapters/entity/Supplier";
+import { ISupplier } from "../../../Supplier/core/domain/ISupplier";
 
 @Entity()
 export class Product implements IProduct{
@@ -18,8 +20,8 @@ export class Product implements IProduct{
     price: string;
     @Column()
     ProfitPercentage: string;
-    @Column()
-    Supplier: string;
+    @ManyToMany(() => Supplier, (supplier) => supplier.products, { eager: true })   
+    Supplier!: ISupplier[];
     @Column()
     urlImage: string;    
     @ManyToMany(() => GroupProduct, (group) => group.products, { eager: true })
@@ -38,7 +40,7 @@ export class Product implements IProduct{
         this.description = '';
         this.price = "0";
         this.ProfitPercentage = "0";
-        this.Supplier = '';
+        // this.Supplier = [];        
         this.urlImage = '';
         this.createdAt = new Date();
         this.updatedAt = new Date();

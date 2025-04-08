@@ -2,6 +2,7 @@ import { IsArray, IsNotEmpty, IsNumber, IsString, ValidateNested } from "class-v
 import { IProduct } from "../../core/domain/IProduct";
 import { IGroupProduct } from "../../../GroupProdut/core/domain/IGroupProduct";
 import { Type } from "class-transformer";
+import { ISupplier } from "../../../Supplier/core/domain/ISupplier";
 
 class ProductCreateDTO implements IProduct { 
     @IsString()
@@ -17,7 +18,7 @@ class ProductCreateDTO implements IProduct {
 
     @IsArray()
     @ValidateNested({ each: true })
-    @Type(() => Object) // adjust as necessary if you have a specific class for group
+    @Type(() => Object) 
     group!: IGroupProduct[];
 
     @IsString()
@@ -31,9 +32,10 @@ class ProductCreateDTO implements IProduct {
     @IsNotEmpty()
     ProfitPercentage!: string;
 
-    @IsString()
-    @IsNotEmpty()
-    Supplier!: string;
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => Object) 
+    Supplier!: ISupplier[];
 
     @IsString()
     urlImage!: string;

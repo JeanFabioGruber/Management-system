@@ -1,4 +1,5 @@
 import { IGroupProduct } from "../../../GroupProdut/core/domain/IGroupProduct";
+import { ISupplier } from "../../../Supplier/core/domain/ISupplier";
 
 
 export interface IProduct {
@@ -10,7 +11,7 @@ export interface IProduct {
     description: string;
     price: string;
     ProfitPercentage: string;
-    Supplier: string;
+    Supplier: ISupplier[];
     urlImage: string;
     createdAt?: Date;
     updatedAt?: Date;

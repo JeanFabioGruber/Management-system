@@ -2,6 +2,7 @@ import { IProduct } from "../domain/IProduct";
 import { Product } from "../../adapters/entity/Product";
 import { url } from "inspector";
 import { AllGroupProductMapper } from "../../../GroupProdut/core/mapper/AllGroupProductMapper";
+import { AllSupplierMapper } from "../../../Supplier/core/mapper/AllSupplierMapper";
 
 export const AllProductMapper = (products: IProduct) => {
     return {  
@@ -13,6 +14,6 @@ export const AllProductMapper = (products: IProduct) => {
         price: products.price,
         url: products.urlImage,
         ProfitPercentage: products.ProfitPercentage,
-        Supplier: products.Supplier,        
+        Supplier: products.Supplier.map(AllSupplierMapper),        
     };    
 }
