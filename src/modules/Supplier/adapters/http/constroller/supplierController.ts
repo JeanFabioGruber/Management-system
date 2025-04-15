@@ -13,6 +13,7 @@ export class SupplierController {
         try {
             const suppliers = await this.supplierService.findAll();
             return res.json(suppliers.map(AllSupplierMapper));
+            
         } catch (error) {
             return res.status(500).json({ message: 'Internal server error' });
         }

@@ -4,12 +4,17 @@ import { IProduct } from "../../../core/domain/IProduct";
 import { errorHandler } from "../../middleware/error/error";
 import { AllProductMapper } from "../../../core/mapper/AllProductMapper";
 import { deleteBlob, downloadBlob, uploadBlob } from "../../../../../adapters/azure/services/blobService";
+import { Supplier } from "../../../../Supplier/adapters/entity/Supplier";
+import { SupplierService } from "../../../../Supplier/core/services/supplierService";
+import { GroupProductService } from "../../../../GroupProdut/core/services/groupProductService";
 
 
 export class ProductController {
 
     constructor(
-        private readonly productService: ProductService
+        private readonly productService: ProductService,
+        private readonly suplierService: SupplierService,
+        private readonly groupProductService: GroupProductService,
     ) { }
 
     async findAll(req: Request, res: Response) {
@@ -56,24 +61,45 @@ export class ProductController {
     }
 
     async create(req: Request, res: Response) {        
-        const product: IProduct = req.body;             
-        const { idGroupProduct, idSupplier } = req.params;
+        const product: IProduct = req.body;   
+        const nameSupplier = product.Supplier.toString();
+        const groupname = product.group.toString();
 
-        console.log("idGroupProduct", idGroupProduct);
-        console.log("idSupplier", idSupplier);
+        // buscar o fornecedor pelo nome para pegar o id
+        const supplier = await this.suplierService.findbyName(nameSupplier);
+        if (!supplier) {
+            return res.status(404).json({ message: 'Supplier not found' });
+        }
+        const idSupplier = supplier.id?.toString();
+
+        // buscar o grupo pelo nome para pegar o id
+        const groupProduct = await this.groupProductService.findByName(groupname);
+        console.log("groupProduct", groupProduct);
+        if (!groupProduct) {
+            return res.status(404).json({ message: 'GroupProduct not found' });
+        }
+        const idGroupProduct = groupProduct.id?.toString();
+
+        console.log("ids", idSupplier, idGroupProduct);
         
+
         try { 
             if (!req.file) {
+                console.log("Nenhum arquivo enviado.");
                 res.status(400).send("Nenhum arquivo enviado.");
                 return;
             }
             const file = req.file;
             const blobUrl = await uploadBlob(file.originalname, file.buffer);    
             if (!blobUrl) {
+                console.log("Erro ao fazer upload do arquivo.");
                 res.status(500).send("Erro ao fazer upload do arquivo.");
                 return;
             } 
             product.urlImage = blobUrl;                
+            if (!idGroupProduct) {                
+                return res.status(400).json({ message: 'GroupProduct ID is undefined' });
+            }
             const newProduct = await this.productService.create(product, idGroupProduct, idSupplier);
             return res.json(newProduct);
         } catch (error) {               

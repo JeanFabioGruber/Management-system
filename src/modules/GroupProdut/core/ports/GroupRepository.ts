@@ -6,5 +6,6 @@ export interface GroupRepositoryPort {
     findById(id: string): Promise<IGroupProduct | null>; 
     create(group: IGroupProduct): Promise<IGroupProduct>;   
     update(id: string, group: IGroupProduct): Promise<IGroupProduct>;
-    delete(id: string): Promise<void>;    
+    delete(id: string): Promise<void>;  
+    findByName(name: string): Promise<IGroupProduct | null>;  
 }

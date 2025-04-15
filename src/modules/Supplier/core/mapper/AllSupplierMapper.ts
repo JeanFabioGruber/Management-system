@@ -4,6 +4,7 @@ import { ISupplier } from "../domain/ISupplier";
 
 export const AllSupplierMapper = (supplier: ISupplier) => {
     return {  
+        // id: supplier.id,
         cnpj: supplier.cnpj,
         situacao: supplier.situacao,
         status: supplier.status,

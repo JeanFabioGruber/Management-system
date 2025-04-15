@@ -32,18 +32,26 @@ export class typeormProductRepo implements ProductRepositoyPort {
         if (productExist) {
             throw new Error('Product already exists');
         }
-        const supplierExist = await this.supplierRepository.findOneBy({ id: idSupplier });   
+        const supplierExist = await this.supplierRepository.findOneBy({ id: idSupplier });           
         if (!supplierExist) {
             throw new Error('Supplier not found');
         }    
-        product.Supplier = [{ ...supplierExist, products: [] }];
+        
+        console.log("aaa", idGroupProductNumber)
         const groupExist = await this.groupRepository.findOneBy({ id: idGroupProductNumber });
+        if (!groupExist) {
+            throw new Error('Group not found');
+        }
         console.log(groupExist);          
         
         if (!groupExist) {
             throw new Error('Group not found');
         }  
+      
+        product.Supplier = [{ ...supplierExist, products: [] }];
         product.group = [{ ...groupExist, products: [] }];
+
+              
         const productDto = plainToClass(ProductCreateDTO, product);
         const errors = await validate(productDto);
         if (errors.length > 0) {

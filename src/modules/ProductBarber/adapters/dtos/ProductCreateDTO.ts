@@ -4,7 +4,7 @@ import { IGroupProduct } from "../../../GroupProdut/core/domain/IGroupProduct";
 import { Type } from "class-transformer";
 import { ISupplier } from "../../../Supplier/core/domain/ISupplier";
 
-class ProductCreateDTO implements IProduct { 
+class ProductCreateDTO { 
     @IsString()
     @IsNotEmpty()
     name!: string;
@@ -14,12 +14,7 @@ class ProductCreateDTO implements IProduct {
 
     @IsString()
     @IsNotEmpty()
-    quantity!: string;
-
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => Object) 
-    group!: IGroupProduct[];
+    quantity!: string;    
 
     @IsString()
     description!: string;
@@ -30,12 +25,7 @@ class ProductCreateDTO implements IProduct {
 
     @IsString() 
     @IsNotEmpty()
-    ProfitPercentage!: string;
-
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => Object) 
-    Supplier!: ISupplier[];
+    ProfitPercentage!: string;    
 
     @IsString()
     urlImage!: string;

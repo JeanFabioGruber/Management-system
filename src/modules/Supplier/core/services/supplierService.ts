@@ -29,4 +29,8 @@ export class SupplierService {
     async createWithcnpj(cnpj: string): Promise<any> {
         return this.supplierRepository.createWithcnpj(cnpj);
     }
+
+    async findbyName(name: string): Promise<any | null> {
+        return this.supplierRepository.findbyName(name);
+    }
 }

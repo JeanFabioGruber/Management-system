@@ -8,4 +8,5 @@ export interface SupplierRepositoyPort {
     update(id: string, supplier: ISupplier): Promise<ISupplier>;
     delete(id: string): Promise<void>;
     createWithcnpj(cnpj: string): Promise<ISupplier>;
+    findbyName(name: string): Promise<ISupplier | null>;
 }

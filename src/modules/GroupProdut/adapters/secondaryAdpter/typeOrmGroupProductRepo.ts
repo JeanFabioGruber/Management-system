@@ -9,8 +9,7 @@ export class TypeOrmGroupProductRepo implements GroupRepositoryPort {
         return this.groupProductRepository.find();
     }
 
-    async findById(id: string): Promise<GroupProduct | null> {
-        console.log("id", id);
+    async findById(id: string): Promise<GroupProduct | null> {        
         const groupProduct = await this.groupProductRepository.findOneBy({ id });
         if (!groupProduct) {
             console.log("GroupProduct not found");
@@ -49,4 +48,13 @@ export class TypeOrmGroupProductRepo implements GroupRepositoryPort {
         console.log("GroupProduct deleted successfully");
         return;
     }
+
+    async findByName(name: string): Promise<GroupProduct | null> {
+        const groupProduct = await this.groupProductRepository.findOneBy({ name });
+        if (!groupProduct) {
+            console.log("GroupProduct not found");
+        }
+        return groupProduct;
+    }
+
 }

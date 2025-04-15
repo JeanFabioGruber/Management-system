@@ -2,6 +2,7 @@ import axios from "axios";
 import { AppDataSource } from "../../../../adapters/dataSource/data-source";
 import { SupplierRepositoyPort } from "../../core/ports/SupplierRepositoryPorts";
 import { Supplier } from "../entity/Supplier";
+import { ISupplier } from "../../core/domain/ISupplier";
 
 export class typeormSupplierRepo implements SupplierRepositoyPort {
     private supplierRepository = AppDataSource.getRepository(Supplier);
@@ -88,4 +89,13 @@ export class typeormSupplierRepo implements SupplierRepositoyPort {
         const supplier = this.supplierRepository.create(supplierData);        
         return this.supplierRepository.save(supplier);
     }
+
+    async findbyName(name: string): Promise<ISupplier | null> {
+        const supplier = await this.supplierRepository.findOneBy({ nome: name });
+        if (!supplier) {
+            console.log("Supplier not found");
+            return null;
+        }
+        return supplier;
     }
+}

@@ -27,4 +27,8 @@ export class GroupProductService {
     async delete(id: string): Promise<void> {
         return this.groupProductRepository.delete(id);
     }
+
+    async findByName(name: string): Promise<IGroupProduct | null> {
+        return this.groupProductRepository.findByName(name);
+    }
 }
